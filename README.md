@@ -36,6 +36,7 @@ magic-mirror/
 ```
 
 TODO:
--update all update_later fields
--update targetRevision in each /apps/.yaml
--update /apps/argo-cd.yaml.example
+-update all update_later fields,
+-update targetRevision in each /apps/.yaml,
+-update /apps/argo-cd.yaml.example,
+-add kor data https://github.com/yonahd/kor
