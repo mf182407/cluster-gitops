@@ -5,6 +5,7 @@ This repository is for managing Helm releases with Argo CD:
 - `argo-cd/` bootstraps the root Application, contains child Applications, and holds Argo CD chart values.
 - `grafana-cloud/` holds Grafana Kubernetes Monitoring chart values.
 - `grafana-cloud-alloy/` holds Grafana Alloy chart values.
+- `kor/` holds Kor values.
 - `magic-mirror/` holds MagicMirror values.
 
 ## 1. Configure the Applications
@@ -30,6 +31,8 @@ argo-cd/
 grafana-cloud/
   values.yaml
 grafana-cloud-alloy/
+  values.yaml
+kor/
   values.yaml
 magic-mirror/
   values.yaml
