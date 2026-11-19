@@ -1,0 +1,164 @@
+config: |
+  let config = {
+    address: "0.0.0.0",
+    port: {{ .Values.service.port }},
+    basePath: "/",
+    ipWhitelist: [],
+    useHttps: false,
+    httpsPrivateKey: "",
+    httpsCertificate: "",
+    language: "en",
+    locale: "en-US",
+    logLevel: ["INFO", "LOG", "WARN", "ERROR"], // Add "DEBUG" for even more logging
+    timeFormat: 24,
+    units: "metric",
+    modules: [
+    {{- if .Values.modules.autoInstall }}
+      {
+        module: "MMM-ModInstall",
+        config: {
+          autoInstall: true
+        },
+      },
+    {{- end }}
+    {{- if .Values.mmpm.enabled }}
+      { module: "MMM-mmpm" },
+    {{- end }}
+      {
+        module: "alert",
+      },
+      {
+        module: "updatenotification",
+        position: "top_bar"
+      },
+      {
+        module: "clock",
+        position: "top_left",
+        config: {
+                displayType: "digital",
+                timeFormat: 12
+        }
+      },
+      {
+        module: "calendar",
+        header: "Shared Calendar",
+        position: "top_left",
+        config: {
+                fade: false,
+                calendars: [
+                  {
+                    symbol: "calendar-check",
+                    url: "webcal://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics"},
+                  {
+                    symbol: "house",
+                    url: "update_later"}
+                ]
+        }
+      },
+      {
+        module: "compliments",
+        position: "lower_third",
+        config: {
+                compliments: {
+                  anytime: [
+                    "roxy is excited to see you!"
+                  ]
+                }
+        }
+      },
+      {
+        module: "weather",
+        position: "top_right",
+        config: {
+          weatherProvider: "openmeteo",
+          type: "current",
+          lat: 40.776676,
+          lon: -73.971321
+        }
+      },
+      {
+        module: "weather",
+        position: "top_right",
+        header: "Weather Forecast",
+        config: {
+          weatherProvider: "openmeteo",
+          type: "forecast",
+          lat: 40.776676,
+          lon: -73.971321
+        }
+      },
+      {
+        module: "newsfeed",
+        position: "bottom_bar",
+        config: {
+          feeds: [
+            {
+              title: "New York Times",
+              url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+            }
+          ],
+          showSourceTitle: true,
+          showPublishDate: true,
+          broadcastNewsFeeds: true,
+          broadcastNewsUpdates: true
+        }
+      },
+    ]
+  };
+  /*************** DO NOT EDIT THE LINE BELOW ***************/
+  if (typeof module !== "undefined") {module.exports = config;}
+css: |
+  /* put your custom css here */
+deploymentStrategy: {}
+env: []
+image: karsten13/magicmirror:debian-server-v2.38.0
+imagePullPolicy: IfNotPresent
+mmpm:
+  apiservice:
+    name: api
+    port: 7891
+    type: ClusterIP
+  enabled: false
+  image: karsten13/mmpm:latest
+  imagePullPolicy: Always
+  logservice:
+    name: log
+    port: 6789
+    type: ClusterIP
+  repservice:
+    name: rep
+    port: 8907
+    type: ClusterIP
+  routing:
+    class: traefik
+    enabled: true
+    hostname: localhost
+    subDomain: mmpm
+    tls: false
+    type: ingress
+  service:
+    port: 7890
+    type: ClusterIP
+modules:
+  autoInstall: false
+persistence:
+  accessMode: ReadWriteOnce
+  annotations: {}
+  enabled: false
+  size: 100Mi
+  storageClass: null
+replicaCount: 1
+routing:
+  class: traefik
+  hostname: localhost
+  subDomain: mm
+  tls: false
+  type: ingress
+secretName: ""
+securityContext:
+  fsGroup: 1000
+  runAsGroup: 1000
+  runAsUser: 1000
+service:
+  port: 8080
+  type: NodePort

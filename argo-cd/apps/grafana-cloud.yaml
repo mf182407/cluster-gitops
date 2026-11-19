@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-cloud
+  namespace: monitor
+spec:
+  project: default
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: k8s-monitoring
+      targetRevision: REPLACE_WITH_INSTALLED_CHART_VERSION
+      helm:
+        releaseName: k8s-monitoring
+        valueFiles:
+          - $values/grafana-cloud/values.yaml
+    - repoURL: https://github.com/mf182407/cluster-gitops.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

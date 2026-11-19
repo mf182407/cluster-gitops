@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: magic-mirror
+  namespace: magic-mirror
+spec:
+  project: default
+  sources:
+    - repoURL: https://gitlab.com/khassel/magicmirror-helm.git
+      targetRevision: REPLACE_WITH_INSTALLED_CHART_VERSION
+      path: .
+      helm:
+        releaseName: magicmirror
+        valueFiles:
+          - $values/magic-mirror/values.yaml
+    - repoURL: https://github.com/mf182407/cluster-gitops.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: magicmirror
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,43 @@
+cluster:
+  name: microk8s
+collectorCommon:
+  alloy:
+    remoteConfig:
+      auth:
+        password: update_later
+        username: "update_later"
+      enabled: true
+      url: https://fleet-management-prod-008.grafana.net
+collectors:
+  alloy:
+    extraService:
+      enabled: true
+      name: otel-receiver
+    presets:
+      - large
+      - root
+      - host-network
+      - host-storage
+      - host-cgroup
+      - clustered
+      - service-discovery
+      - filesystem-log-reader
+      - daemonset
+      - otel-receiver
+metrics:
+  scrapeInterval: 60s
+profiling:
+  enabled: false
+telemetryServices:
+  beyla:
+    deploy: false
+  kube-state-metrics:
+    deploy: true
+  node-exporter:
+    deploy: true
+  opencost:
+    deploy: false
+  sdkInjector:
+    deploy: false
+traces:
+  enabled: false
